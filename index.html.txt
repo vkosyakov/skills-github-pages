@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оплата заказа</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    .step-indicator {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.5rem;
+    }
+    .active-step {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .inactive-step {
+      background-color: #d1d5db;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen p-6">
+    <div class="max-w-md mx-auto mb-8">
+      <h1 class="text-2xl font-bold text-center mb-6">Оплата заказа</h1>
+      
+      <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+        <div class="flex justify-between">
+          <div class="flex items-center">
+            <div class="step-indicator active-step">1</div>
+            <span>Заказ</span>
+          </div>
+          <div class="flex items-center">
+            <div id="step2" class="step-indicator inactive-step">2</div>
+            <span>Оплата</span>
+          </div>
+          <div class="flex items-center">
+            <div id="step3" class="step-indicator inactive-step">3</div>
+            <span>Готовка</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Шаг 1: Детали заказа -->
+      <div id="step1Content" class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <h2 class="text-xl font-bold">Заказ <span id="orderId">ORD1234</span></h2>
+        </div>
+        
+        <div class="mb-4 p-4 bg-gray-50 rounded-md">
+          <h3 class="font-bold mb-2">Состав заказа:</h3>
+          <div id="orderItems">
+            <div class="flex justify-between mb-1">
+              <span>Пепперони x1</span>
+              <span>450 ₽</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Кола x2</span>
+              <span>240 ₽</span>
+            </div>
+          </div>
+          <div class="border-t mt-2 pt-2 font-bold flex justify-between">
+            <span>Итого:</span>
+            <span id="orderTotal">690 ₽</span>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <p><strong>Статус заказа:</strong> <span class="text-yellow-600">Ожидает подтверждения</span></p>
+          <p><strong>Адрес доставки:</strong> <span id="orderAddress">ул. Примерная, д. 123, кв. 45</span></p>
+          <p><strong>Телефон:</strong> <span id="orderPhone">+7 (900) 123-45-67</span></p>
+        </div>
+        
+        <div class="flex justify-between">
+          <button id="cancelOrderBtn" class="px-4 py-2 bg-re</button>
+          <button id="approveBtn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
+            Подтвердить заказ
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Шаг 2: Оплата -->
+      <div id="step2Content" class="bg-white p-6 rounded-lg shadow-md hidden">
+        <div class="flex items-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <h2 class="text-xl font-bold">Оплата заказа <span id="paymentOrderId">ORD1234</span></h2>
+        </div>
+        
+        <div class="mb-6">
+          <p class="text-green-600 font-bold mb-2">✅ Ваш заказ подтвержден!</p>
+          <p>Для продолжения, пожалуйста, выберите способ оплаты:</p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div id="cardPayment" class="border p-4 rounded-md cursor-pointer border-blue-500 bg-blue-50">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              <span>Банковская карта</span>
+            </div>
+          </div>
+          <div id="cashPayment" class="border p-4 rounded-md cursor-pointer hover:bg-gray-50">
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              <span>Наличными при получении</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-4 p-4 bg-gray-50 rounded-md">
+          <div class="font-bold flex justify-between">
+            <span>К оплате:</span>
+            <span id="paymentTotal">690 ₽</span>
+          </div>
+        </div>
+        
+        <div class="flex justify-between">
+          <button id="cancelPaymentBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Отменить заказ</button>
+          <button id="payBtn" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
+            Оплатить заказ
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Шаг 3: Успешная оплата -->
+      <div id="step3Content" class="bg-white p-6 rounded-lg shadow-md hidden">
+        <div class="flex items-center mb-4 justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <h2 class="text-2xl font-bold">Оплата прошла успешно!</h2>
+        </div>
+        
+        <div class="mb-6 text-center">
+          <p class="mb-2">Спасибо за оплату заказа <span id="successOrderId">ORD1234</span>.</p>
+          <p>Ваш заказ передан на кухню и скоро будет готов.</p>
+        </div>
+        
+        <div class="flex justify-center mb-6">
+          <div class="bg-blue-50 p-4 rounded-md max-w-sm text-center">
+            <p class="font-bold mb-2">Статус заказа: <span class="text-green-600">Оплачен</span></p>
+            <p class="text-sm">Уведомление об оплате отправлено администратору</p>
+          </div>
+        </div>
+        
+        <div class="flex justify-center">
+          <button id="doneBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Вернуться в бот
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Генерация случайного ID заказа
+    const orderId = 'ORD' + Math.floor(Math.random() * 10000);
+    document.getElementById('orderId').textContent = orderId;
+    document.getElementById('paymentOrderId').textContent = orderId;
+    document.getElementById('successOrderId').textContent = orderId;
+    
+    // Обработка нажатия кнопки "Подтвердить заказ"
+    document.getElementById('approveBtn').addEventListener('click', function() {
+      document.getElementById('step1Content').classList.add('hidden');
+      document.getElementById('step2Content').classList.remove('hidden');
+      document.getElementById('step2').classList.remove('inactive-step');
+      document.getElementById('step2').classList.add('active-step');
+    });
+    
+    // Выбор способа оплаты
+    document.getElementById('cardPayment').addEventListener('click', function() {
+      document.getElementById('cardPayment').classList.add('border-blue-500', 'bg-blue-50');
+      document.getElementById('cashPayment').classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    document.getElementById('cashPayment').addEventListener('click', function() {
+      document.getElementById('cashPayment').classList.add('border-blue-500', 'bg-blue-50');
+      document.getElementById('cardPayment').classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    // Обработка нажатия кнопки "Оплатить заказ"
+    document.getElementById('payBtn').addEventListener('click', function() {
+      document.getElementById('step2Content').classList.add('hidden');
+      document.getElementById('step3Content').classList.remove('hidden');
+      document.getElementById('step3').classList.remove('inactive-step');
+      document.getElementById('step3').classList.add('active-step');
+    });
+    
+    // Обработка нажатия кнопки "Вернуться в бот"
+    document.getElementById('doneBtn').addEventListener('click', function() {
+      // В реальном сценарии здесь будет редирект обратно в Telegram
+      alert('В реальном боте это действие вернуло бы вас обратно в Telegram');
+      // window.Telegram.WebApp.close();
+    });
+    
+    // Обработка отмены заказа
+    document.getElementById('cancelOrderBtn').addEventListener('click', function() {
+      if (confirm('Вы уверены, что хотите отменить заказ?')) {
+        alert('Заказ отменен');
+        // В реальном сценарии здесь будет редирект обратно в Telegram
+        // window.Telegram.WebApp.close();
+      }
+    });
+    
+    document.getElementById('cancelPaymentBtn').addEventListener('click', function() {
+      if (confirm('Вы уверены, что хотите отменить заказ?')) {
+        alert('Заказ отменен');
+        // В реальном сценарии здесь будет редирект обратно в Telegram
+        // window.Telegram.WebApp.close();
+      }
+    });
+  </script>
+</body>
+</html>
